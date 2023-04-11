@@ -18,7 +18,7 @@ def book_table(request):
             #--------------------------------------------
             subject = "Reservation Confirmation"
             message = f"Hello {reservation.name}, \n\nThank you for making a reservation with us. \n\nYour reservation details are as follows: \n\nEvent: {reservation.event} \nDate: {reservation.date} \nTime: {reservation.time} \nNumber of People: {reservation.people} \n\nWe look forward to seeing you. \n\nRegards, \nto cancel your reservation, click on the link below \n\nhttp://127.0.0.1:8000/book/cancel/{reservation.id} \n\n Regards, \nBits Cafe"
-            email_from = 'bitzcaffe@gmail.com'
+            email_from = 'adoniyasg7s@gmail.com'
             email_to = reservation.email
             print(message, email_to, email_from)
             send_mail(subject, message, email_from, [email_to])

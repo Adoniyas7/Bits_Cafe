@@ -126,9 +126,9 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 
 from django.contrib.messages import constants as messages
-# from dotenv import load_dotenv
+from dotenv import load_dotenv
 
-# load_dotenv()
+load_dotenv()
 
 MESSAGE_TAGS = {
         messages.DEBUG: 'alert-secondary',
