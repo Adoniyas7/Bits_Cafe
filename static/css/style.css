@@ -758,6 +758,41 @@ a:focus {
   width: 100%;
 }
 
+.submit-btn {
+  margin-top: 15px;
+  border: none;
+  text-transform: uppercase;
+  display: inline-block;
+  padding: 10px 55px;
+  background-color: #7ec143;
+  color: #ffffff;
+  border-radius: 45px;
+  -webkit-transition: all 0.3s;
+  transition: all 0.3s;
+  border: none;
+}
+.cancel-btn {
+  margin-top: 15px;
+  border: none;
+  text-transform: uppercase;
+  display: inline-block;
+  padding: 10px 55px;
+  background-color: #c23049;
+  color: #ffffff;
+  border-radius: 45px;
+  -webkit-transition: all 0.3s;
+  transition: all 0.3s;
+  border: none;
+}
+
+.cancel-btn:hover {
+  background-color: #a12c3f;
+}
+
+.submit-btn:hover {
+  background-color: #e69c00;
+}
+
 /* client section start */
 .client_section .heading_container {
   margin-bottom: 30px;

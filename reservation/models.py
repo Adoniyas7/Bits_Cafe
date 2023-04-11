@@ -17,7 +17,7 @@ class Reservation(models.Model):
     )
 
 
-    PEOPLE_CHOICE += tuple([(i,i) for i in range(1,51)])
+    PEOPLE_CHOICE += tuple([(i,i) for i in range(1,26)])
 
     STATUS_CHOICE = (
         ('Pending', 'Pending'),

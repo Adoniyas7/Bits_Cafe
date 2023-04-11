@@ -1,14 +1,17 @@
 from django.shortcuts import render
+from reservation.forms import ReservationForm
 
 # Create your views here.
 def home(request):
-    return render(request, "home.html")
+    context = {'form':ReservationForm()}
+    return render(request, "home.html", context)
 
 def menu(request):
     return render(request, "menu.html")
 
 def book(request):
-    return render(request, "book.html")
+    context = {'form': ReservationForm()}
+    return render(request, "book.html", context)
 
 def about(request):
     return render(request, "about.html")
