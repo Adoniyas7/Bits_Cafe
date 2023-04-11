@@ -1,10 +1,11 @@
 from django.shortcuts import render, redirect
-from reservation.forms import ReservationForm
+from .forms import ReservationForm
 from django.contrib import messages
 from django.core.mail import send_mail
+from .models import Reservation
 
 # Create your views here.
-def home(request):
+def book_table(request):
     form = ReservationForm()
     context = {"form": form}
     if request.method =="POST":
@@ -23,19 +24,19 @@ def home(request):
             send_mail(subject, message, email_from, [email_to])
             #--------------------------------------------
 
-            return redirect("home")
+            return redirect("book")
         else:
             messages.error(request, "Reservation Failed. Please Try Again")
-    return render(request, "home.html", context)
-    # context = {'form':ReservationForm()}
-    # return render(request, "home.html", context)
-
-def menu(request):
-    return render(request, "menu.html")
-
-def book(request):
-    context = {'form': ReservationForm()}
     return render(request, "book.html", context)
 
-def about(request):
-    return render(request, "about.html")
+def cancel_reservation(request, id):
+    reservation = Reservation.objects.get(id=id)
+    if request.method == "POST":
+        print("POST")
+        reservation.delete()
+        messages.success(request, "Reservation Cancelled Successfully")
+        return redirect("cancel_reservation_success")
+    return render(request, "cancel_booking.html", {"reservation": reservation})
+
+def cancel_reservation_success(request):
+    return render(request, "cancel_booking_success.html")
