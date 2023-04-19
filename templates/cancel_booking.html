@@ -1,0 +1,61 @@
+{% extends 'base.html' %} {% load static %} {% block nav_item %}
+<li class="nav-item">
+  <a class="nav-link" href="{% url 'home' %}">Home</a>
+</li>
+<li class="nav-item">
+  <a class="nav-link" href="{% url 'menu' %}">Menu</a>
+</li>
+<li class="nav-item">
+  <a class="nav-link" href="{% url 'about' %}">About</a>
+</li>
+<li class="nav-item">
+  <a class="nav-link" href="{% url 'book' %}">Book Table</a>
+</li>
+
+{% endblock %} {% block content %}
+<body class="sub_page">
+  <section class="book_section layout_padding">
+    <div class="container">
+      <div class="heading_container">
+        {% if messages %} {% for message in messages %}
+        <div class="alert {{ message.tags }}" role="alert">{{ message }}</div>
+        {% endfor %} {% else %}
+        <h2>Cancel Reservation</h2>
+        <p>Hello {{ reservation.name|title }},</p>
+
+        <p>
+          Are you sure you want to cancel your reservation on
+          {{reservation.date}} at {{ reservation.time }} for
+          {{reservation.people}} people?
+        </p>
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form_container">
+            <form
+              method="post"
+              action="{% url 'cancel_reservation' reservation.id %}"
+            >
+              {% csrf_token %}
+              <div class="btn_box">
+                <input
+                  class="cancel-btn"
+                  type="submit"
+                  value="Cancel Reservation"
+                />
+                <button
+                  type="button"
+                  onclick="window.location.href='{% url 'home' %}'"
+                >
+                  Go Back
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      {% endif %}
+    </div>
+  </section>
+  {% endblock %}
+</body>

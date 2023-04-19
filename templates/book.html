@@ -21,57 +21,24 @@
     <div class="container">
       <div class="heading_container">
         <h2>Book A Table</h2>
+        {% for message in messages %}
+        <div class="alert {{ message.tags }}" role="alert">{{ message }}</div>
+        {% endfor %}
       </div>
       <div class="row">
         <div class="col-md-6">
           <div class="form_container">
-            <form action="">
-              <div>
-                <input
-                  type="text"
-                  class="form-control"
-                  placeholder="Your Name"
-                />
-              </div>
-              <div>
-                <input
-                  type="text"
-                  class="form-control"
-                  placeholder="Phone Number"
-                />
-              </div>
-              <div>
-                <input
-                  type="email"
-                  class="form-control"
-                  placeholder="Your Email"
-                />
-              </div>
-              <div>
-                <select class="form-control nice-select wide">
-                  <option value="" disabled selected>Event type </option>
-                  <option value="">Birthday</option>
-                  <option value="">Party</option>
-                  <option value="">Other</option>
-                </select>
-              </div>
-              <div>
-                <select class="form-control nice-select wide">
-                  <option value="" disabled selected>How many persons?</option>
-                  <option value="">2</option>
-                  <option value="">3</option>
-                  <option value="">4</option>
-                  <option value="">5</option>
-                </select>
-              </div>
-              <div>
-                <input type="date" class="form-control" />
-              </div>
-              <div>
-                <input type="time" class="form-control" />
-              </div>
-              <div class="btn_box">
-                <button>Book Now</button>
+            <form method="post" action="{% url 'book' %}">
+              {% csrf_token %}
+              <div>{{form.name}}</div>
+              <div>{{form.phone}}</div>
+              <div>{{form.email}}</div>
+              <div>{{form.event}}</div>
+              <div>{{form.people}}</div>
+              <div>{{form.date}}</div>
+              <div>{{form.time}}</div>
+              <div class="btn-box">
+                <input class="submit-btn" type="submit" value="Book Now" />
               </div>
             </form>
           </div>
