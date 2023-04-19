@@ -2,11 +2,11 @@ from django.shortcuts import render, redirect
 from reservation.forms import ReservationForm
 from django.contrib import messages
 from django.core.mail import send_mail
-
+from .models import FoodCategory
 # Create your views here.
 def home(request):
     form = ReservationForm()
-    context = {"form": form}
+    context = {"form": form,"categories": FoodCategory.objects.all()}
     if request.method =="POST":
         form = ReservationForm(request.POST)
         if form.is_valid():
@@ -31,7 +31,8 @@ def home(request):
     # return render(request, "home.html", context)
 
 def menu(request):
-    return render(request, "menu.html")
+    context = {"categories": FoodCategory.objects.all()}
+    return render(request, "menu.html", context)
 
 def book(request):
     context = {'form': ReservationForm()}
