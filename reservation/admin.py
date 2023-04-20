@@ -8,5 +8,6 @@ class ReservationAdmin(admin.ModelAdmin):
     list_editable = ["status"]
     list_filter = ["status", "created_at"]
     list_per_page=10
+    search_fields = ["name__istartswith", "email__istartswith", "phone__istartswith"]
 
 admin.site.register(Reservation, ReservationAdmin)
