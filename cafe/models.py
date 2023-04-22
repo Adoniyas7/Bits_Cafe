@@ -23,3 +23,9 @@ class MenuItem(models.Model):
         return self.name    
     def get_total(self):
         return self.price * self.quantity
+class DailySpecial(models.Model):
+    title = models.CharField(max_length=100)
+    food = models.ForeignKey(MenuItem, on_delete= models.CASCADE)
+
+    def str(self):
+        return self.title

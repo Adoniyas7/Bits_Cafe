@@ -1,5 +1,5 @@
 from django.test import TestCase
-from .models import  MenuItem, FoodCategory
+from .models import  MenuItem, FoodCategory, DailySpecial
 from decimal import Decimal
 
 # Create your tests here.
@@ -29,3 +29,21 @@ class FoodCategoryTestCase(TestCase):
     def test_foodcategory(self):
         breakfast = FoodCategory.objects.get(name="Breakfast")
         self.assertEqual(breakfast.name, "Breakfast")
+
+        
+class DailySpecialTestCase(TestCase):
+    def setUp(self):
+        FoodCategory.objects.create(name="Breakfast")
+        MenuItem.objects.create(name="Eggs Benedict", 
+                                description="Eggs Benedict is a dish consisting of two halves of an English muffin topped with Canadian bacon and poached eggs, and covered with a hollandaise sauce.", 
+                                price=12.99, 
+                                image="https://media.istockphoto.com/id/1291954554/es/foto/huevo-escalfado-en-tostadas-con-manchas-de-yema-de-cerca.jpg?s=1024x1024&w=is&k=20&c=iDW3pN42Ve0msfDLGW8kcCeKQTkbWdJYNRCGhPjP0yw=",
+                                category=FoodCategory.objects.get(name="Breakfast"), 
+                                slug="eggs-benedict", 
+                                quantity=1
+                                )
+        DailySpecial.objects.create(title="Eggs Benedict", food=MenuItem.objects.get(name="Eggs Benedict"))
+    def test_dailyspecial(self):
+        eggs_benedict = DailySpecial.objects.get(title="Eggs Benedict")
+        self.assertEqual(eggs_benedict.title, "Eggs Benedict")
+        self.assertEqual(eggs_benedict.food.name, "Eggs Benedict")
