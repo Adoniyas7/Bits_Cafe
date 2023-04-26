@@ -44,7 +44,7 @@ def about(request):
     return render(request, "about.html")
 
 def register(request):
-    context = {'form': CustomerForm()}
+    context = {'form': CustomerForm(), "page": "register"}
     if request.method == "POST":
         form = CustomerForm(request.POST, request.FILES)
         if form.is_valid():
