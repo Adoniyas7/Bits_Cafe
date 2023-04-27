@@ -142,6 +142,11 @@
                     <g></g>
                   </svg>
                 </a>
+                {% if page == 'register' %}
+                <a href="{% url 'login' %}" class="login-btn"> Login </a>
+                {% else %}
+                <a href="{% url 'register' %}" class="reg-btn"> Regiser </a>
+                {% endif %}
               </div>
             </div>
           </nav>
