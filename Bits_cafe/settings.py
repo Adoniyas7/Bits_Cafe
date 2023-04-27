@@ -150,3 +150,5 @@ EMAIL_HOST_USER = 'bitzcaffe@gmail.com'
 EMAIL_HOST_PASSWORD = os.environ.get('APP_PASSWORD')
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
+LOGIN_REDIRECT_URL = 'home'
+LOGOUT_REDIRECT_URL = 'home'
