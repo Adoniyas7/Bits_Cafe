@@ -9,5 +9,6 @@ urlpatterns = [
     path("book/cancel/<int:id>/", rviews.cancel_reservation, name="cancel_reservation"),
     path("book/cancel/", rviews.cancel_reservation_success, name="cancel_reservation_success"),
     path("about/", views.about, name="about"),
+    path("register/", views.register, name="register"),
 
 ]

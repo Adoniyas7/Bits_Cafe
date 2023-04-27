@@ -3,6 +3,8 @@ from reservation.forms import ReservationForm
 from django.contrib import messages
 from django.core.mail import send_mail
 from .models import FoodCategory
+from .forms import CustomerForm
+from django.contrib.auth import authenticate, login
 # Create your views here.
 def home(request):
     form = ReservationForm()
@@ -40,3 +42,23 @@ def book(request):
 
 def about(request):
     return render(request, "about.html")
+
+def register(request):
+    context = {'form': CustomerForm(), "page": "register"}
+    if request.method == "POST":
+        form = CustomerForm(request.POST, request.FILES)
+        if form.is_valid():
+            user = form.save()
+            messages.success(request, "Registration Successful. You Can Now Login")
+            return redirect("home") #change to login
+        else:
+            print("error")
+            print(form.errors)
+
+            # messages.error(request, "Registration Failed. Please Try Again \n Ensure That Your Passwords Match" + str(form.errors))
+            for field in form:
+                for error in field.errors:
+                    messages.error(request, error)
+            return redirect("register")
+
+    return render(request, "registration/register.html", context)

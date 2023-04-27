@@ -255,6 +255,24 @@ a:focus {
   fill: #7ec143;
 }
 
+/* outlined button */
+.user_option .reg-btn {
+  display: inline-block;
+  background-color: transparent;
+  border: 1px solid #7ec143;
+  color: #7ec143;
+  padding: 8px 29px;
+  border-radius: 45px;
+}
+.user_option .reg-btn:hover {
+  display: inline-block;
+  background-color: #7ec143;
+  border: 1px solid #7ec143;
+  color: #ffffff;
+  padding: 8px 29px;
+  border-radius: 45px;
+}
+
 .user_option .order_online {
   display: inline-block;
   padding: 8px 30px;

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import FoodCategory, MenuItem, DailySpecial
+from .models import FoodCategory, MenuItem, DailySpecial, Customer
 # Register your models here.
 class priceFilter(admin.SimpleListFilter):
     title = "Price"
@@ -42,3 +42,4 @@ class DailySpecialAdmin(admin.ModelAdmin):
     autocomplete_fields = ["food"]
 
 admin.site.register(DailySpecial, DailySpecialAdmin)
+admin.site.register(Customer)
