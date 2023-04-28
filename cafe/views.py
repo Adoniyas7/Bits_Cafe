@@ -49,8 +49,8 @@ def register(request):
         form = CustomerForm(request.POST, request.FILES)
         if form.is_valid():
             user = form.save()
-            messages.success(request, "Registration Successful. You Can Now Login.")
-            return redirect("login") 
+            messages.success(request, "Registration Successful. You Can Now Login")
+            return redirect("home") #change to login
         else:
             print("error")
             print(form.errors)

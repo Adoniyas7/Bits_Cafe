@@ -273,30 +273,6 @@ a:focus {
   border-radius: 45px;
 }
 
-.user_option .login-btn {
-  display: inline-block;
-  padding: 8px 30px;
-  background-color: #7ec143;
-  color: #ffffff;
-  border-radius: 45px;
-  -webkit-transition: all 0.3s;
-  transition: all 0.3s;
-  border: none;
-}
-
-.user_option .login-btn:hover {
-  background-color: #58892d;
-}
-
-.user_option .user-profile {
-  display: inline-block;
-  background-color: transparent;
-  border: 1px solid #7ec143;
-  color: #7ec143;
-  padding: 8px 29px;
-  border-radius: 45px;
-}
-
 .user_option .order_online {
   display: inline-block;
   padding: 8px 30px;

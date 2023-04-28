@@ -3,7 +3,6 @@ from .models import  MenuItem, FoodCategory, DailySpecial, Customer
 from decimal import Decimal
 from django.contrib.auth.models import User
 from .forms import CustomerForm
-from django.urls import reverse
 
 # Create your tests here.
 
@@ -86,22 +85,3 @@ class CustomerFormTestCase(TestCase):
 
 
 
-class LoginTest(TestCase):
-    def setUp(self):
-        self.username = "abebe"
-        self.password = "uKD36k95E*4^"
-        self.user = User.objects.create_user(username=self.username, password=self.password)
-
-    def test_login(self):
-        data = {'username': self.username, 'password': self.password}
-        response = self.client.post(reverse('login'), data)
-        self.assertEqual(response.status_code, 302)
-        self.assertRedirects(response, reverse('home')) 
-
-
-    def test_login_fail(self):
-        data = {'username': self.username, 'password': '12345'}
-        response = self.client.post(reverse('login'), data)
-        self.assertEqual(response.status_code, 200)
-        # self.assertTemplateUsed(response, 'registration/login.html')
-        self.assertContains(response, 'Please enter a correct username and password. Note that both fields may be case-sensitive.')
