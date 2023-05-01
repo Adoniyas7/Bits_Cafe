@@ -2,35 +2,49 @@ from django.shortcuts import render, redirect
 from reservation.forms import ReservationForm
 from django.contrib import messages
 from django.core.mail import send_mail
-from .models import FoodCategory
-from .forms import CustomerForm
+from .models import FoodCategory, Review
+from .forms import CustomerForm, ReviewForm
 from django.contrib.auth import authenticate, login
 # Create your views here.
 def home(request):
     form = ReservationForm()
-    context = {"form": form,"categories": FoodCategory.objects.all()}
+    context = {"form": form,"categories": FoodCategory.objects.all(),
+               'review_form': ReviewForm(),
+               'reviews': Review.objects.all()}
     if request.method =="POST":
-        form = ReservationForm(request.POST)
-        if form.is_valid():
-            reservation = form.save()
-            form = ReservationForm()
-            messages.success(request, "Reservation Was Successful. Check Your Email For Confirmation.")
-            #sending email
-            #--------------------------------------------
-            subject = "Reservation Confirmation"
-            message = f"Hello {reservation.name}, \n\nThank you for making a reservation with us. \n\nYour reservation details are as follows: \n\nEvent: {reservation.event} \nDate: {reservation.date} \nTime: {reservation.time} \nNumber of People: {reservation.people} \n\nWe look forward to seeing you. \n\nRegards, \nto cancel your reservation, click on the link below \n\nhttp://127.0.0.1:8000/book/cancel/{reservation.id} \n\n Regards, \nBits Cafe"
-            email_from = 'adoniyasg7s@gmail.com'
-            email_to = reservation.email
-            print(message, email_to, email_from)
-            send_mail(subject, message, email_from, [email_to])
-            #--------------------------------------------
+        if 'reservation' in request.POST:
+            form = ReservationForm(request.POST)
+            if form.is_valid():
+                reservation = form.save()
+                form = ReservationForm()
+                messages.success(request, "Reservation Was Successful. Check Your Email For Confirmation.")
+                #sending email
+                #--------------------------------------------
+                subject = "Reservation Confirmation"
+                message = f"Hello {reservation.name}, \n\nThank you for making a reservation with us. \n\nYour reservation details are as follows: \n\nEvent: {reservation.event} \nDate: {reservation.date} \nTime: {reservation.time} \nNumber of People: {reservation.people} \n\nWe look forward to seeing you. \n\nRegards, \nto cancel your reservation, click on the link below \n\nhttp://127.0.0.1:8000/book/cancel/{reservation.id} \n\n Regards, \nBits Cafe"
+                email_from = 'adoniyasg7s@gmail.com'
+                email_to = reservation.email
+                print(message, email_to, email_from)
+                send_mail(subject, message, email_from, [email_to])
+                #--------------------------------------------
 
-            return redirect("home")
-        else:
-            messages.error(request, "Reservation Failed. Please Try Again")
+                return redirect("home")
+            else:
+                messages.error(request, "Reservation Failed. Please Try Again")
+                return redirect("home")
+        elif 'review' in request.POST:
+            review_form = ReviewForm(request.POST)
+            if review_form.is_valid():
+                review = review_form.save(commit=False)
+                review.user = request.user
+                review.save()
+                messages.success(request, "Review Was Successful. Thank You For Your Feedback.")
+                return redirect("home")
+            else:
+                messages.error(request, "Review Failed. Please Try Again")
+                return redirect("home")
+            
     return render(request, "home.html", context)
-    # context = {'form':ReservationForm()}
-    # return render(request, "home.html", context)
 
 def menu(request):
     context = {"categories": FoodCategory.objects.all()}

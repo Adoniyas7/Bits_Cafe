@@ -30,6 +30,7 @@ class DailySpecial(models.Model):
 
     def str(self):
         return self.title
+    
 
 class Customer(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -42,3 +43,12 @@ class Customer(models.Model):
 
     def __str__(self):
         return self.first_name + " " + self.last_name
+    
+class Review(models.Model):
+    user = models.ForeignKey("auth.User", on_delete=models.CASCADE)
+    review = models.TextField()
+    date_created = models.DateTimeField(auto_now_add=True, null = True)
+    approved = models.BooleanField(default=False)
+    def __str__(self):
+        return self.user.email
+    
