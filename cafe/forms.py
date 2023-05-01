@@ -1,6 +1,6 @@
 from django.forms import ModelForm
 from django import forms
-from .models import Customer
+from .models import Customer, Review
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from .validators import validate_email
@@ -36,3 +36,11 @@ class CustomerForm(UserCreationForm):
             customer.profile_pic = 'profile_images/default.png.png'
             customer.save()
         return user
+    
+class ReviewForm(forms.ModelForm):
+    class Meta:
+        model = Review
+        fields = ('review',)
+        widgets = {
+            'review': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Write your review'}),
+        }
