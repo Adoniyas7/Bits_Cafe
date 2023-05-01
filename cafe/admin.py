@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import FoodCategory, MenuItem, DailySpecial, Customer
+from .models import FoodCategory, MenuItem, DailySpecial, Customer, Review
 # Register your models here.
 class priceFilter(admin.SimpleListFilter):
     title = "Price"
@@ -43,3 +43,4 @@ class DailySpecialAdmin(admin.ModelAdmin):
 
 admin.site.register(DailySpecial, DailySpecialAdmin)
 admin.site.register(Customer)
+admin.site.register(Review)
