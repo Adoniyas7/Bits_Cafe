@@ -41,6 +41,12 @@ class DailySpecialAdmin(admin.ModelAdmin):
     list_display_links = None
     autocomplete_fields = ["food"]
 
+class ReviewAdmin(admin.ModelAdmin):
+    list_display = ("user", "review", "date_created", "approved")
+    list_editable = ("approved",)
+    list_filter = ["approved"]
+    autocomplete_fields = ["user"]
+
 admin.site.register(DailySpecial, DailySpecialAdmin)
 admin.site.register(Customer)
-admin.site.register(Review)
+admin.site.register(Review,ReviewAdmin)
