@@ -33,7 +33,7 @@ class CustomerForm(UserCreationForm):
             print('image')
         else:
             print('no image')
-            customer.profile_pic = 'profile_images/default.png.png'
+            customer.profile_pic = 'profile_images/default.png'
             customer.save()
         return user
     
