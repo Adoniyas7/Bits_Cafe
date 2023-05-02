@@ -41,6 +41,9 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "cafe",
     "reservation",
+    "crispy_forms",
+    "crispy_bootstrap4",
+
 ]
 
 MIDDLEWARE = [
@@ -145,3 +148,7 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'bitzcaffe@gmail.com' 
 EMAIL_HOST_PASSWORD = os.environ.get('APP_PASSWORD')
+
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
+LOGIN_REDIRECT_URL = 'home'
+LOGOUT_REDIRECT_URL = 'home'

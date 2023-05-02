@@ -1,0 +1,41 @@
+{% extends 'base_2.html' %} {% load crispy_forms_tags %}{% load static %}
+<!-- <link rel ="stylesheet" href="{% static 'css/login_style.css' %}" /> -->
+{% block nav_item %}
+<body class="sub_page">
+  <li class="nav-item">
+    <a class="nav-link" href="{% url 'home' %}">Home</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="{% url 'menu' %}">Menu</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="{% url 'about' %}">About</a>
+  </li>
+  <li class="nav-item active">
+    <a class="nav-link" href="{% url 'book' %}"
+      >Book Table<span class="sr-only">(current)</span></a
+    >
+  </li>
+  {% endblock %} {% block content %}
+  <div class="login-page">
+    <div class="form">
+      <form class="login-form" method="post">
+        <h1>Login</h1>
+        {% if messages %} {% for message in messages %}
+        <div class="alert {{ message.tags }}" role="alert">{{ message }}</div>
+        {% endfor %} {% endif %} {% csrf_token %} {{ form | crispy }}
+        <div class="btn-box">
+          <button>Login</button>
+        </div>
+        <p class="message">
+          Not registered? <a href="{% url 'register' %}">Create an account</a>
+        </p>
+        <p class="message">
+          Forgot your password?
+          <a href="{% url 'password_reset' %}">Reset Password</a>
+        </p>
+      </form>
+    </div>
+  </div>
+  {% endblock %}
+</body>

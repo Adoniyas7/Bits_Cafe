@@ -2,33 +2,50 @@ from django.shortcuts import render, redirect
 from reservation.forms import ReservationForm
 from django.contrib import messages
 from django.core.mail import send_mail
-from .models import FoodCategory
+from .models import FoodCategory, Review, Customer 
+from .forms import CustomerForm, ReviewForm, CustomerProfileForm 
+from django.contrib.auth import authenticate, login
+from django.contrib.auth.decorators import login_required
 # Create your views here.
 def home(request):
     form = ReservationForm()
-    context = {"form": form,"categories": FoodCategory.objects.all()}
+    context = {"form": form,"categories": FoodCategory.objects.all(),
+               'review_form': ReviewForm(),
+               'reviews': Review.objects.all()}
     if request.method =="POST":
-        form = ReservationForm(request.POST)
-        if form.is_valid():
-            reservation = form.save()
-            form = ReservationForm()
-            messages.success(request, "Reservation Was Successful. Check Your Email For Confirmation.")
-            #sending email
-            #--------------------------------------------
-            subject = "Reservation Confirmation"
-            message = f"Hello {reservation.name}, \n\nThank you for making a reservation with us. \n\nYour reservation details are as follows: \n\nEvent: {reservation.event} \nDate: {reservation.date} \nTime: {reservation.time} \nNumber of People: {reservation.people} \n\nWe look forward to seeing you. \n\nRegards, \nto cancel your reservation, click on the link below \n\nhttp://127.0.0.1:8000/book/cancel/{reservation.id} \n\n Regards, \nBits Cafe"
-            email_from = 'adoniyasg7s@gmail.com'
-            email_to = reservation.email
-            print(message, email_to, email_from)
-            send_mail(subject, message, email_from, [email_to])
-            #--------------------------------------------
+        if 'reserve' in request.POST:
+            form = ReservationForm(request.POST)
+            if form.is_valid():
+                reservation = form.save()
+                form = ReservationForm()
+                messages.success(request, "Reservation Was Successful. Check Your Email For Confirmation.")
+                #sending email
+                #--------------------------------------------
+                subject = "Reservation Confirmation"
+                message = f"Hello {reservation.name}, \n\nThank you for making a reservation with us. \n\nYour reservation details are as follows: \n\nEvent: {reservation.event} \nDate: {reservation.date} \nTime: {reservation.time} \nNumber of People: {reservation.people} \n\nWe look forward to seeing you. \n\nRegards, \nto cancel your reservation, click on the link below \n\nhttp://127.0.0.1:8000/book/cancel/{reservation.id} \n\n Regards, \nBits Cafe"
+                email_from = 'adoniyasg7s@gmail.com'
+                email_to = reservation.email
+                print(message, email_to, email_from)
+                send_mail(subject, message, email_from, [email_to])
+                #--------------------------------------------
 
-            return redirect("home")
-        else:
-            messages.error(request, "Reservation Failed. Please Try Again")
+                return redirect("home")
+            else:
+                messages.error(request, "Reservation Failed. Please Try Again")
+                return redirect("home")
+        elif 'review' in request.POST:
+            review_form = ReviewForm(request.POST)
+            if review_form.is_valid():
+                review = review_form.save(commit=False)
+                review.user = request.user
+                review.save()
+                messages.success(request, "Review Was Successful. Thank You For Your Feedback.")
+                return redirect("home")
+            else:
+                messages.error(request, "Review Failed. Please Try Again")
+                return redirect("home")
+            
     return render(request, "home.html", context)
-    # context = {'form':ReservationForm()}
-    # return render(request, "home.html", context)
 
 def menu(request):
     context = {"categories": FoodCategory.objects.all()}
@@ -40,3 +57,44 @@ def book(request):
 
 def about(request):
     return render(request, "about.html")
+
+def register(request):
+    context = {'form': CustomerForm(), "page": "register"}
+    if request.method == "POST":
+        form = CustomerForm(request.POST, request.FILES)
+        if form.is_valid():
+            user = form.save()
+            messages.success(request, "Registration Successful. You Can Now Login.")
+            return redirect("login") 
+        else:
+            print("error")
+            print(form.errors)
+
+            # messages.error(request, "Registration Failed. Please Try Again \n Ensure That Your Passwords Match" + str(form.errors))
+            for field in form:
+                for error in field.errors:
+                    messages.error(request, error)
+            return redirect("register")
+
+    return render(request, "registration/register.html", context)
+
+@login_required(login_url="login")
+def profile(request):
+    customer = Customer.objects.get_or_create(user=request.user)[0]
+    context = {"form": CustomerProfileForm(instance=customer)}
+    print(customer.user)
+    if request.method == 'POST':
+        form = CustomerProfileForm(request.POST, request.FILES, instance=customer)
+        if form.is_valid():
+            customer = form.save(commit=False)
+            customer.user = request.user
+            customer.save()
+            request.user.first_name = customer.first_name
+            request.user.last_name = customer.last_name
+            request.user.save()
+            messages.success(request, 'Your profile was successfully updated!')
+            return redirect('profile')
+    else:
+        form = CustomerProfileForm(instance=customer)
+        context = {"form": form, "customer": customer}
+    return render(request, 'registration/profile.html', context)

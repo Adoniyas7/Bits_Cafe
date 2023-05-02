@@ -1,6 +1,9 @@
 from django.test import TestCase
-from .models import  MenuItem, FoodCategory, DailySpecial
+from .models import  MenuItem, FoodCategory, DailySpecial, Customer
 from decimal import Decimal
+from django.contrib.auth.models import User
+from .forms import CustomerForm
+from django.urls import reverse
 
 # Create your tests here.
 
@@ -47,3 +50,58 @@ class DailySpecialTestCase(TestCase):
         eggs_benedict = DailySpecial.objects.get(title="Eggs Benedict")
         self.assertEqual(eggs_benedict.title, "Eggs Benedict")
         self.assertEqual(eggs_benedict.food.name, "Eggs Benedict")
+
+class CustomerTestCase(TestCase):
+    def setUp(self):
+        user = User.objects.create_user(username="abebe", password="1234567890")
+        Customer.objects.create(user = user, first_name="abebe", last_name="kebede", email="abebe123@gmail.com", phone_number="1234567890")
+    def test_customer(self):
+        customer = Customer.objects.get(first_name="abebe")
+        self.assertEqual(customer.first_name, "abebe")
+        self.assertEqual(customer.last_name, "kebede")
+        self.assertEqual(customer.email, "abebe123@gmail.com")
+        self.assertEqual(customer.phone_number, "1234567890")
+
+class CustomerFormTestCase(TestCase):
+    def test_customerform(self):
+        data = {
+            "username":'abebe',
+            "first_name":'abebe',
+            "last_name":'kebede',
+            "email":'abebe123@gmail.com',
+            "phone_number":'0912345678',
+            "password1":'123jI(4567890',
+            "password2":'123jI(4567890'
+        }
+        form = CustomerForm(data=data)
+
+        self.assertTrue(form.is_valid())
+        self.assertEqual(form.cleaned_data['username'], 'abebe')
+        self.assertEqual(form.cleaned_data['first_name'], 'abebe')
+        self.assertEqual(form.cleaned_data['last_name'], 'kebede')
+        self.assertEqual(form.cleaned_data['email'], 'abebe123@gmail.com')
+        self.assertEqual(form.cleaned_data['phone_number'], '0912345678')
+        self.assertEqual(form.cleaned_data['password1'], '123jI(4567890')
+        self.assertEqual(form.cleaned_data['password2'], '123jI(4567890')
+
+
+
+class LoginTest(TestCase):
+    def setUp(self):
+        self.username = "abebe"
+        self.password = "uKD36k95E*4^"
+        self.user = User.objects.create_user(username=self.username, password=self.password)
+
+    def test_login(self):
+        data = {'username': self.username, 'password': self.password}
+        response = self.client.post(reverse('login'), data)
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, reverse('home')) 
+
+
+    def test_login_fail(self):
+        data = {'username': self.username, 'password': '12345'}
+        response = self.client.post(reverse('login'), data)
+        self.assertEqual(response.status_code, 200)
+        # self.assertTemplateUsed(response, 'registration/login.html')
+        self.assertContains(response, 'Please enter a correct username and password. Note that both fields may be case-sensitive.')

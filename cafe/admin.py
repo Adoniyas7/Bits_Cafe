@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import FoodCategory, MenuItem, DailySpecial
+from .models import FoodCategory, MenuItem, DailySpecial, Customer, Review
 # Register your models here.
 class priceFilter(admin.SimpleListFilter):
     title = "Price"
@@ -41,4 +41,19 @@ class DailySpecialAdmin(admin.ModelAdmin):
     list_display_links = None
     autocomplete_fields = ["food"]
 
+class ReviewAdmin(admin.ModelAdmin):
+    list_display = ("user", "review", "date_created", "approved")
+    list_editable = ("approved",)
+    list_filter = ["approved"]
+    autocomplete_fields = ["user"]
+
+class CustomerAdmin(admin.ModelAdmin):
+    list_display = ("user", "first_name", "last_name", "email", "phone_number", "profile_pic", "created_at")
+    list_filter = ["created_at"]
+    search_fields = ["first_name__istartswith", "last_name__istartswith", "email__istartswith"]
+    autocomplete_fields = ["user"]
+
+
 admin.site.register(DailySpecial, DailySpecialAdmin)
+admin.site.register(Customer, CustomerAdmin)
+admin.site.register(Review,ReviewAdmin)
