@@ -13,7 +13,7 @@ def home(request):
                'review_form': ReviewForm(),
                'reviews': Review.objects.all()}
     if request.method =="POST":
-        if 'reservation' in request.POST:
+        if 'reserve' in request.POST:
             form = ReservationForm(request.POST)
             if form.is_valid():
                 reservation = form.save()

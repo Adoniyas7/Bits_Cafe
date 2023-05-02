@@ -47,6 +47,13 @@ class ReviewAdmin(admin.ModelAdmin):
     list_filter = ["approved"]
     autocomplete_fields = ["user"]
 
+class CustomerAdmin(admin.ModelAdmin):
+    list_display = ("user", "first_name", "last_name", "email", "phone_number", "profile_pic", "created_at")
+    list_filter = ["created_at"]
+    search_fields = ["first_name__istartswith", "last_name__istartswith", "email__istartswith"]
+    autocomplete_fields = ["user"]
+
+
 admin.site.register(DailySpecial, DailySpecialAdmin)
-admin.site.register(Customer)
+admin.site.register(Customer, CustomerAdmin)
 admin.site.register(Review,ReviewAdmin)

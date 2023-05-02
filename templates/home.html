@@ -954,10 +954,10 @@
     <div class="row">
       <div class="col-md-6">
         <div class="form_container">
-          <form method="post" class="form">
-            {% csrf_token %} {{ review_form.as_p }}
+          <form method="post" class="form" name="review">
+            {% csrf_token %} {{ review_form.review }}
             <div class="btn_box">
-              <input type="submit" value="Submit" class="submit-btn" name="review" />
+              <input type="submit" value="Submit" class="submit-btn"  />
             </div>
           </form>
         </div>
