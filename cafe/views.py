@@ -2,9 +2,10 @@ from django.shortcuts import render, redirect
 from reservation.forms import ReservationForm
 from django.contrib import messages
 from django.core.mail import send_mail
-from .models import FoodCategory, Review
-from .forms import CustomerForm, ReviewForm
+from .models import FoodCategory, Review, Customer 
+from .forms import CustomerForm, ReviewForm, CustomerProfileForm 
 from django.contrib.auth import authenticate, login
+from django.contrib.auth.decorators import login_required
 # Create your views here.
 def home(request):
     form = ReservationForm()
@@ -76,3 +77,24 @@ def register(request):
             return redirect("register")
 
     return render(request, "registration/register.html", context)
+
+@login_required(login_url="login")
+def profile(request):
+    customer = Customer.objects.get_or_create(user=request.user)[0]
+    context = {"form": CustomerProfileForm(instance=customer)}
+    print(customer.user)
+    if request.method == 'POST':
+        form = CustomerProfileForm(request.POST, request.FILES, instance=customer)
+        if form.is_valid():
+            customer = form.save(commit=False)
+            customer.user = request.user
+            customer.save()
+            request.user.first_name = customer.first_name
+            request.user.last_name = customer.last_name
+            request.user.save()
+            messages.success(request, 'Your profile was successfully updated!')
+            return redirect('profile')
+    else:
+        form = CustomerProfileForm(instance=customer)
+        context = {"form": form, "customer": customer}
+    return render(request, 'registration/profile.html', context)
