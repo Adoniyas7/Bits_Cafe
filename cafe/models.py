@@ -18,12 +18,10 @@ class MenuItem(models.Model):
     category = models.ForeignKey(FoodCategory, on_delete= models.CASCADE, null = True)
     slug = models.SlugField(max_length=100, unique=True, serialize=True, null = True)
     created_at = models.DateTimeField(auto_now_add=True)
-    quantity = models.IntegerField(default=1)
 
     def __str__(self):
         return self.name    
-    def get_total(self):
-        return self.price * self.quantity
+
 class DailySpecial(models.Model):
     title = models.CharField(max_length=100)
     food = models.ForeignKey(MenuItem, on_delete= models.CASCADE)
