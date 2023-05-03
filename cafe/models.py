@@ -50,3 +50,13 @@ class Review(models.Model):
     def __str__(self):
         return self.user.email
     
+class Cart(models.Model):
+    user = models.ForeignKey("auth.User", on_delete=models.CASCADE)
+    item = models.ForeignKey(MenuItem, on_delete=models.CASCADE)
+    quantity = models.IntegerField(default=1)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.item.name
+
+    
