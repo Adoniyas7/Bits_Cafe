@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from reservation.forms import ReservationForm
 from django.contrib import messages
 from django.core.mail import send_mail
-from .models import FoodCategory, Review, Customer , MenuItem, DailySpecial
+from .models import FoodCategory, Review, Customer , MenuItem, DailySpecial, Cart
 from .forms import CustomerForm, ReviewForm, CustomerProfileForm 
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
@@ -122,3 +122,14 @@ def profile(request):
         form = CustomerProfileForm(instance=customer)
         context = {"form": form, "customer": customer}
     return render(request, 'registration/profile.html', context)
+
+@login_required(login_url="login")
+def cart(request):
+    cart = Cart.objects.filter(user=request.user)
+    total_price = sum([item.item.price * item.quantity for item in cart])
+    total_items = sum([item.quantity for item in cart])
+    context = {"cart_items": cart,
+               "total_items": total_items,
+               "total_price": total_price,
+               }
+    return render(request, "cart.html", context)

@@ -58,5 +58,8 @@ class Cart(models.Model):
 
     def __str__(self):
         return self.item.name
+    
+    def get_total(self):
+        return self.item.price * self.quantity
 
     
