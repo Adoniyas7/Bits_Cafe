@@ -85,7 +85,7 @@
                 <a href="{% url 'profile' %}" class="user_link">
                   <i class="fa fa-user" aria-hidden="true"></i>
                 </a>
-                <a class="cart_link" href="#">
+                <a class="cart_link" href="{% url 'cart' %}"> 
                   <svg
                     version="1.1"
                     id="Capa_1"
@@ -139,6 +139,7 @@
                     <g></g>
                     <g></g>
                   </svg>
+                  <span class="badge badge-warning" id="CartCount">{{total_item | default:0}}</span>
                 </a>
                 {% if user.is_authenticated %}
                 <a href="{% url 'profile' %}" class="user-profile">
