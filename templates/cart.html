@@ -57,8 +57,8 @@
                   <td>${{ cart.item.price }}</td>
                   <td>${{ cart.get_total }}</td>
                   <td>
-                    <a class="btn btn-danger" href="">Remove</a>
-                  </td>
+                    <a class="btn btn-danger" href="{% url 'remove_from_cart' cart.id %}">Remove</a>
+                  </td>s
                 </tr>
                 {% endfor %}
               </tbody>

@@ -9,11 +9,15 @@ from django.contrib.auth.decorators import login_required
 # Create your views here.
 def home(request):
     form = ReservationForm()
+    cart = Cart.objects.filter(user=request.user)
+    total_items = sum([item.quantity for item in cart])
+
     context = {"form": form,"categories": FoodCategory.objects.all(),
                'review_form': ReviewForm(),
                'reviews': Review.objects.all(),
                'menu_items': MenuItem.objects.all(),
-               'daily_specials': DailySpecial.objects.all()
+               'daily_specials': DailySpecial.objects.all(),
+               'total_items': total_items
                }
     if request.method =="POST":
         if 'reserve' in request.POST:
@@ -147,4 +151,10 @@ def add_to_cart(request, id):
             item=item,
             quantity=1)
 
+    return redirect("cart")
+
+@login_required(login_url="login")
+def remove_from_cart(request, id):
+    item = Cart.objects.filter(user=request.user).get(id=id)
+    item.delete()
     return redirect("cart")
