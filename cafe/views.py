@@ -133,3 +133,18 @@ def cart(request):
                "total_price": total_price,
                }
     return render(request, "cart.html", context)
+
+@login_required(login_url="login")
+def add_to_cart(request, id):
+    item = MenuItem.objects.get(id=id)
+    if Cart.objects.filter(user=request.user, item=item).exists():
+        cart_item = Cart.objects.filter(user=request.user).get(item = item)
+        cart_item.quantity += 1
+        cart_item.save()
+    else:
+        Cart.objects.create(
+            user=request.user,
+            item=item,
+            quantity=1)
+
+    return redirect("cart")
