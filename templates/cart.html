@@ -1,0 +1,105 @@
+{% extends 'base.html' %} {% load static %} {% block nav_item %}
+<body class="sub_page">
+  <li class="nav-item">
+    <a class="nav-link" href="{% url 'home' %}">Home</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="{% url 'menu' %}">Menu</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="{% url 'about' %}">About</a>
+  </li>
+  <li class="nav-item active">
+    <a class="nav-link" href="{% url 'book' %}">Book Table</a>
+  </li>
+  {% endblock %} {% block content %}
+
+  <div class="cart">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-9 mt-5">
+          <h3 class="text-center">Cart</h3>
+          {% if cart_items %}
+          <div class="table-responsive">
+            <table class="table table-light">
+              <thead>
+                <tr>
+                  <th scope="col">Name</th>
+                  <th scope="col">Quantity</th>
+                  <th scope="col">Price</th>
+                  <th scope="col">Total</th>
+                  <th scope="col">Action</th>
+                  <th scope="col"></th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for cart in cart_items %}
+                <tr>
+                  <td>{{ cart.item.name }}</td>
+                  <td>
+                    <form
+                      action="{% url 'update_cart' cart.id %}"
+                      method="POST"
+                    >
+                      {% csrf_token %}
+                      <input
+                        type="number"
+                        name="quantity"
+                        value="{{ cart.quantity }}"
+                      />
+                      <input
+                        class="btn btn-success"
+                        type="submit"
+                        value="Update"
+                      />
+                    </form>
+                  </td>
+                  <td>${{ cart.item.price }}</td>
+                  <td>${{ cart.get_total }}</td>
+                  <td>
+                    <a class="btn btn-danger" href="{% url 'remove_from_cart' cart.id %}">Remove</a>
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+          {% else %}
+          <h4 class="text-center">
+            Sorry, Your Cart is Empty....Please add Items!!!
+          </h4>
+          {% endif %}
+        </div>
+        <div class="col-sm-3 mt-5 mb-3">
+          <div class="content-section">
+            <h3 class="text-center">Order Summary</h3>
+            <ul class="list-group">
+              <li
+                class="list-group-item list-group-item-light text-center text-dark"
+              >
+                Number of Items: {{ total_items }}
+              </li>
+              <li
+                class="list-group-item list-group-item-light text-center text-dark"
+              >
+                Total: ${{ total_price }}
+              </li>
+              <li
+                class="list-group-item list-group-item-light text-center text-dark"
+              >
+                <a class="btn btn-primary" href="{% url 'order' %}"
+                  >Order</a
+                >
+              </li>
+              <li class="list-group-item list-group-item-light text-center">
+                <a class="btn btn-success" href="/">Back</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {% endblock %}
+</body>

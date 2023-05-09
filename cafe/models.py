@@ -18,12 +18,10 @@ class MenuItem(models.Model):
     category = models.ForeignKey(FoodCategory, on_delete= models.CASCADE, null = True)
     slug = models.SlugField(max_length=100, unique=True, serialize=True, null = True)
     created_at = models.DateTimeField(auto_now_add=True)
-    quantity = models.IntegerField(default=1)
 
     def __str__(self):
         return self.name    
-    def get_total(self):
-        return self.price * self.quantity
+
 class DailySpecial(models.Model):
     title = models.CharField(max_length=100)
     food = models.ForeignKey(MenuItem, on_delete= models.CASCADE)
@@ -51,4 +49,39 @@ class Review(models.Model):
     approved = models.BooleanField(default=False)
     def __str__(self):
         return self.user.email
+    
+class Cart(models.Model):
+    user = models.ForeignKey("auth.User", on_delete=models.CASCADE)
+    item = models.ForeignKey(MenuItem, on_delete=models.CASCADE)
+    quantity = models.IntegerField(default=1)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.item.name
+    
+    def get_total(self):
+        return self.item.price * self.quantity
+
+class Order(models.Model):
+
+    STATUS = (
+        ("Pending", "Pending"),
+        ("Out for delivery", "Out for delivery"),
+        ("Delivered", "Delivered"),
+    )
+
+    user = models.ForeignKey("auth.User", on_delete=models.CASCADE, null=True, blank=True)
+    items = models.ManyToManyField(Cart)
+    total = models.DecimalField(max_digits=5, decimal_places=2)
+    status = models.CharField(max_length=200, null=True, choices=STATUS, default="Pending")
+    created_at = models.DateTimeField(auto_now_add=True)
+    # paid = models.BooleanField(default=False)
+
+    def str(self):
+        return (self.user.username + " " + str(self.created_at))
+    def get_total(self):
+        total = 0
+        for item in self.items.all():
+            total += item.get_total()
+        return total
     

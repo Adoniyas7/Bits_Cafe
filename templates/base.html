@@ -62,7 +62,7 @@
         <div class="container">
           <nav class="navbar navbar-expand-lg custom_nav-container">
             <a class="navbar-brand" href="{% url 'home' %}">
-              <span> Bits Cafe </span>
+              <span> Yegna Restaurant </span>
             </a>
 
             <button
@@ -85,7 +85,7 @@
                 <a href="{% url 'profile' %}" class="user_link">
                   <i class="fa fa-user" aria-hidden="true"></i>
                 </a>
-                <a class="cart_link" href="#">
+                <a class="cart_link" href="{% url 'cart' %}"> 
                   <svg
                     version="1.1"
                     id="Capa_1"
@@ -139,6 +139,7 @@
                     <g></g>
                     <g></g>
                   </svg>
+                  <span class="badge badge-warning" id="CartCount">{{total_items | default:0}}</span>
                 </a>
                 {% if user.is_authenticated %}
                 <a href="{% url 'profile' %}" class="user-profile">
@@ -186,7 +187,7 @@
           </div>
           <div class="col-md-4 footer-col">
             <div class="footer_detail">
-              <a href="" class="footer-logo"> Bits cafe </a>
+              <a href="" class="footer-logo"> Yegna Restaurant </a>
               <p>
                 Necessary, making this the first true generator on the Internet.
                 It uses a dictionary of over 200 Latin words, combined with
@@ -217,7 +218,7 @@
           </div>
         </div>
         <div class="footer-info">
-          <p>&copy; <span id="displayYear"></span> Bits Caffe</p>
+          <p>&copy; <span id="displayYear"></span> Yegna Restaurant</p>
         </div>
       </div>
     </footer>
