@@ -158,3 +158,14 @@ def remove_from_cart(request, id):
     item = Cart.objects.filter(user=request.user).get(id=id)
     item.delete()
     return redirect("cart")
+
+@login_required(login_url="login")
+def update_cart(request, id):
+    item = Cart.objects.filter(user=request.user).get(id=id)
+    quantity = request.POST.get("quantity")
+    item.quantity = quantity
+    item.save()
+
+    # total = float(item.item.price) * int(quantity)
+    # print(total)
+    return redirect("cart")

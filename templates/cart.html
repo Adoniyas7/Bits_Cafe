@@ -38,7 +38,7 @@
                   <td>{{ cart.item.name }}</td>
                   <td>
                     <form
-                      action=""
+                      action="{% url 'update_cart' cart.id %}"
                       method="POST"
                     >
                       {% csrf_token %}
