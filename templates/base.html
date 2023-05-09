@@ -139,7 +139,7 @@
                     <g></g>
                     <g></g>
                   </svg>
-                  <span class="badge badge-warning" id="CartCount">{{total_item | default:0}}</span>
+                  <span class="badge badge-warning" id="CartCount">{{total_items | default:0}}</span>
                 </a>
                 {% if user.is_authenticated %}
                 <a href="{% url 'profile' %}" class="user-profile">
