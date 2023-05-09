@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block nav_item %}
+<li class="nav-item">
+  <a class="nav-link" href="{% url 'home' %}">Home</a>
+</li>
+<li class="nav-item active">
+  <a class="nav-link" href="{% url 'menu' %}"
+    >Menu<span class="sr-only">(current)</span></a
+  >
+</li>
+<li class="nav-item">
+  <a class="nav-link" href="{% url 'about' %}">About</a>
+</li>
+<li class="nav-item">
+  <a class="nav-link" href="{% url 'book' %}">Book Table</a>
+</li>
+{% endblock %} {% block content %}
+<body class="sub_page">
+    <section class="book_section layout_padding">
+    <div class="container">
+      <div class="heading_container">
+        {% for message in messages %}
+        <div class="alert {{ message.tags }}" role="alert">{{ message }}</div>
+        {% endfor %} 
+    </div>
+  </section>
+    {% endblock %}
+</body>
+

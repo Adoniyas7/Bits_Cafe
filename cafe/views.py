@@ -2,22 +2,22 @@ from django.shortcuts import render, redirect
 from reservation.forms import ReservationForm
 from django.contrib import messages
 from django.core.mail import send_mail
-from .models import FoodCategory, Review, Customer , MenuItem, DailySpecial, Cart
+from .models import FoodCategory, Review, Customer , MenuItem, DailySpecial, Cart, Order
 from .forms import CustomerForm, ReviewForm, CustomerProfileForm 
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 # Create your views here.
 def home(request):
     form = ReservationForm()
-    cart = Cart.objects.filter(user=request.user)
-    total_items = sum([item.quantity for item in cart])
+    # cart = Cart.objects.filter(user=request.user)
+    # total_items = sum([item.quantity for item in cart])
 
     context = {"form": form,"categories": FoodCategory.objects.all(),
                'review_form': ReviewForm(),
                'reviews': Review.objects.all(),
                'menu_items': MenuItem.objects.all(),
                'daily_specials': DailySpecial.objects.all(),
-               'total_items': total_items
+            #    'total_items': total_items
                }
     if request.method =="POST":
         if 'reserve' in request.POST:
@@ -169,3 +169,22 @@ def update_cart(request, id):
     # total = float(item.item.price) * int(quantity)
     # print(total)
     return redirect("cart")
+
+@login_required(login_url="login")
+def order(request):
+    cart = Cart.objects.filter(user=request.user)
+    total_price = sum([item.item.price * item.quantity for item in cart])
+    order = Order(
+        user=request.user,
+        total=total_price,
+    )
+    order.save()
+    order.items.set(cart)
+    print("Order created")
+
+    context = {"cart_items": cart,
+               "item_count": cart.count(),
+               "total_price": total_price,
+               }
+    messages.success(request, "Order placed successfully. Thank you for ordering.")
+    return render(request, "order.html", context)
