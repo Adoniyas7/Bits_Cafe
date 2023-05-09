@@ -9,15 +9,18 @@ from django.contrib.auth.decorators import login_required
 # Create your views here.
 def home(request):
     form = ReservationForm()
-    # cart = Cart.objects.filter(user=request.user)
-    # total_items = sum([item.quantity for item in cart])
+    if request.user.is_authenticated:
+        cart = Cart.objects.filter(user=request.user)
+        total_items = sum([item.quantity for item in cart])
+    else:
+        total_items = 0
 
     context = {"form": form,"categories": FoodCategory.objects.all(),
                'review_form': ReviewForm(),
                'reviews': Review.objects.all(),
                'menu_items': MenuItem.objects.all(),
                'daily_specials': DailySpecial.objects.all(),
-            #    'total_items': total_items
+               'total_items': total_items
                }
     if request.method =="POST":
         if 'reserve' in request.POST:
