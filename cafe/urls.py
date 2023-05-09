@@ -18,5 +18,6 @@ urlpatterns = [
     path("reset_password_complete/", auth_views.PasswordResetCompleteView.as_view(), name="password_reset_complete"),
     path("profile/", views.profile, name="profile"),
     path("cart/", views.cart, name="cart"),
+    path("cart/add/<int:id>/", views.add_to_cart, name="add_to_cart"),
 
 ]

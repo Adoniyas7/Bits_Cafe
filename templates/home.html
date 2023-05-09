@@ -58,7 +58,7 @@
               <div class="detail-box">
                 <h5>{{meal.title}}</h5>
                 <h6>{{meal.food.name}}</h6>
-                <a href="">
+                <a href="{% url 'add_to_cart' meal.food.id %}">
                   Order Now
                   <svg
                     version="1.1"
@@ -157,7 +157,7 @@
                   </p>
                   <div class="options">
                     <h6>${{food.price}}</h6>
-                    <a href="">
+                    <a href="{% url 'add_to_cart' food.id %}">
                       <svg
                         version="1.1"
                         id="Capa_1"
