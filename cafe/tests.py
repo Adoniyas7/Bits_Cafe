@@ -124,3 +124,32 @@ class CartTest(TestCase):
         response = self.client.get(reverse('cart'))
         # Then i should navigate to the cart page
         self.assertEqual(response.status_code, 200)
+
+    def test_empty_cart(self):
+        # Given im on the cart page and i have no items in my cart
+        # When i scroll through the page
+        response = self.client.get(reverse('cart'))
+        # Then i should see a message saying "Sorry, Your Cart is Empty. Please add Items!!!"
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'Sorry, Your Cart is Empty....Please add Items!!!')
+
+    def test_cart_with_items(self):
+        # Given im on the cart page and i have items in my cart
+        self.client.get(reverse('add_to_cart', args= [MenuItem.objects.get(name="Eggs Benedict").id]))
+        # When i scroll through the page
+        response = self.client.get(reverse('cart'))
+        # Then I should be able to view items in the cart with their name, quantity, price, and total
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'Eggs Benedict')
+        self.assertContains(response, '1')
+        self.assertContains(response, '12.99')
+        self.assertContains(response, '12.99')
+
+    def test_cart_for_logged_out_user(self):
+        # Given im not logged in
+        self.client.logout()
+        # When i click on the cart icon
+        response = self.client.get(reverse('cart'))
+        # Then i should be redirected to the login page
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, reverse('login') + '?next=/cart/')
