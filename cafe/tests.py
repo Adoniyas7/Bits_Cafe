@@ -109,6 +109,25 @@ class LoginTest(TestCase):
         self.assertEqual(response.status_code, 302)
         self.assertRedirects(response, reverse('home'))
 
+    def test_login_fail(self):
+        # Given im on the login page
+        response = self.client.get(reverse('login'))
+        # When I enter a wrong username and password and click on the “Login” button
+        data = {'username': self.username, 'password': '12345'}
+        response = self.client.post(reverse('login'), data)
+        # Then I should see an error message and be prompted to try again
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'Please enter a correct username and password. Note that both fields may be case-sensitive.')
+        
+    def test_forgot_password(self):
+        # Given im on the login page
+        response = self.client.get(reverse('login'))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'Reset Password')
+        # When i click on the “Reset Password” link
+        response = self.client.get(reverse('password_reset'))
+        # Then i should be navigated to the “Password Reset” page
+        self.assertEqual(response.status_code, 200)
 
 class CartTest(TestCase):
     def setUp(self):
