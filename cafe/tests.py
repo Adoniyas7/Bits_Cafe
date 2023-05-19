@@ -128,6 +128,16 @@ class LoginTest(TestCase):
         response = self.client.get(reverse('password_reset'))
         # Then i should be navigated to the “Password Reset” page
         self.assertEqual(response.status_code, 200)
+        
+    def test_create_account(self):
+        # Given im on the login page
+        response = self.client.get(reverse('login'))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response,"Create an account")
+        # When i click on the “Create Account” link
+        response = self.client.get(reverse('register'))
+        # Then I should be navigated to a page where I can create a new account
+        self.assertEqual(response.status_code, 200) 
 
 class CartTest(TestCase):
     def setUp(self):
