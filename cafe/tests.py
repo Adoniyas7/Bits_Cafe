@@ -15,8 +15,7 @@ class MenuItemTestCase(TestCase):
                                 price=12.99, 
                                 image="https://media.istockphoto.com/id/1291954554/es/foto/huevo-escalfado-en-tostadas-con-manchas-de-yema-de-cerca.jpg?s=1024x1024&w=is&k=20&c=iDW3pN42Ve0msfDLGW8kcCeKQTkbWdJYNRCGhPjP0yw=", 
                                 category=FoodCategory.objects.get(name="Breakfast"), 
-                                slug="eggs-benedict", 
-                                quantity=1
+                                slug="eggs-benedict"
                                 )
     def test_menuitem(self):
         eggs_benedict = MenuItem.objects.get(name="Eggs Benedict")
@@ -24,7 +23,6 @@ class MenuItemTestCase(TestCase):
         self.assertEqual(eggs_benedict.price, Decimal('12.99'))
         self.assertEqual(eggs_benedict.category.name, "Breakfast")
         self.assertEqual(eggs_benedict.slug, "eggs-benedict")
-        self.assertEqual(eggs_benedict.quantity, 1)
 
 class FoodCategoryTestCase(TestCase):
     def setUp(self):
@@ -43,7 +41,6 @@ class DailySpecialTestCase(TestCase):
                                 image="https://media.istockphoto.com/id/1291954554/es/foto/huevo-escalfado-en-tostadas-con-manchas-de-yema-de-cerca.jpg?s=1024x1024&w=is&k=20&c=iDW3pN42Ve0msfDLGW8kcCeKQTkbWdJYNRCGhPjP0yw=",
                                 category=FoodCategory.objects.get(name="Breakfast"), 
                                 slug="eggs-benedict", 
-                                quantity=1
                                 )
         DailySpecial.objects.create(title="Eggs Benedict", food=MenuItem.objects.get(name="Eggs Benedict"))
     def test_dailyspecial(self):
@@ -105,3 +102,54 @@ class LoginTest(TestCase):
         self.assertEqual(response.status_code, 200)
         # self.assertTemplateUsed(response, 'registration/login.html')
         self.assertContains(response, 'Please enter a correct username and password. Note that both fields may be case-sensitive.')
+
+class CartTest(TestCase):
+    def setUp(self):
+        User.objects.create_user(username="abebe", password="1234567890")
+        # Given im logged in as a customer
+        self.client.login(username="abebe", password="1234567890")
+        FoodCategory.objects.create(name="Breakfast")
+        MenuItem.objects.create(name="Eggs Benedict", 
+                                description="Eggs Benedict is a dish consisting of two halves of an English muffin topped with Canadian bacon and poached eggs, and covered with a hollandaise sauce.", 
+                                price=12.99, 
+                                image="https://media.istockphoto.com/id/1291954554/es/foto/huevo-escalfado-en-tostadas-con-manchas-de-yema-de-cerca.jpg?s=1024x1024&w=is&k=20&c=iDW3pN42Ve0msfDLGW8kcCeKQTkbWdJYNRCGhPjP0yw=",
+                                category=FoodCategory.objects.get(name="Breakfast"), 
+                                slug="eggs-benedict", 
+                                )
+        DailySpecial.objects.create(title="Eggs Benedict", food=MenuItem.objects.get(name="Eggs Benedict"))
+
+
+    def test_cart_page(self):
+        # When i click on the cart icon
+        response = self.client.get(reverse('cart'))
+        # Then i should navigate to the cart page
+        self.assertEqual(response.status_code, 200)
+
+    def test_empty_cart(self):
+        # Given im on the cart page and i have no items in my cart
+        # When i scroll through the page
+        response = self.client.get(reverse('cart'))
+        # Then i should see a message saying "Sorry, Your Cart is Empty. Please add Items!!!"
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'Sorry, Your Cart is Empty....Please add Items!!!')
+
+    def test_cart_with_items(self):
+        # Given im on the cart page and i have items in my cart
+        self.client.get(reverse('add_to_cart', args= [MenuItem.objects.get(name="Eggs Benedict").id]))
+        # When i scroll through the page
+        response = self.client.get(reverse('cart'))
+        # Then I should be able to view items in the cart with their name, quantity, price, and total
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'Eggs Benedict')
+        self.assertContains(response, '1')
+        self.assertContains(response, '12.99')
+        self.assertContains(response, '12.99')
+
+    def test_cart_for_logged_out_user(self):
+        # Given im not logged in
+        self.client.logout()
+        # When i click on the cart icon
+        response = self.client.get(reverse('cart'))
+        # Then i should be redirected to the login page
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, reverse('login') + '?next=/cart/')
