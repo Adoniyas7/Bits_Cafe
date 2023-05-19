@@ -99,6 +99,17 @@ class LoginTest(TestCase):
         # Then i should be navigated to the login page
         self.assertEqual(response.status_code, 200)
 
+    def test_login_success(self):
+        # Given im on the login page
+        response = self.client.get(reverse('login'))
+        # When I enter my username and password and click on the “Login” button
+        data = {'username': self.username, 'password': self.password}
+        response = self.client.post(reverse('login'), data)
+        # Then i should be logged in and redirected to the home page
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, reverse('home'))
+
+
 class CartTest(TestCase):
     def setUp(self):
         User.objects.create_user(username="abebe", password="1234567890")
