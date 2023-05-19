@@ -89,19 +89,55 @@ class LoginTest(TestCase):
         self.password = "uKD36k95E*4^"
         self.user = User.objects.create_user(username=self.username, password=self.password)
 
-    def test_login(self):
+    def test_login_page(self):
+        # Given im on the home page
+        response = self.client.get(reverse('home'))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'Login')
+        # When i click on the login button
+        response = self.client.get(reverse('login'))
+        # Then i should be navigated to the login page
+        self.assertEqual(response.status_code, 200)
+
+    def test_login_success(self):
+        # Given im on the login page
+        response = self.client.get(reverse('login'))
+        # When I enter my username and password and click on the “Login” button
         data = {'username': self.username, 'password': self.password}
         response = self.client.post(reverse('login'), data)
+        # Then i should be logged in and redirected to the home page
         self.assertEqual(response.status_code, 302)
-        self.assertRedirects(response, reverse('home')) 
-
+        self.assertRedirects(response, reverse('home'))
 
     def test_login_fail(self):
+        # Given im on the login page
+        response = self.client.get(reverse('login'))
+        # When I enter a wrong username and password and click on the “Login” button
         data = {'username': self.username, 'password': '12345'}
         response = self.client.post(reverse('login'), data)
+        # Then I should see an error message and be prompted to try again
         self.assertEqual(response.status_code, 200)
-        # self.assertTemplateUsed(response, 'registration/login.html')
         self.assertContains(response, 'Please enter a correct username and password. Note that both fields may be case-sensitive.')
+        
+    def test_forgot_password(self):
+        # Given im on the login page
+        response = self.client.get(reverse('login'))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'Reset Password')
+        # When i click on the “Reset Password” link
+        response = self.client.get(reverse('password_reset'))
+        # Then i should be navigated to the “Password Reset” page
+        self.assertEqual(response.status_code, 200)
+        
+    def test_create_account(self):
+        # Given im on the login page
+        response = self.client.get(reverse('login'))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response,"Create an account")
+        # When i click on the “Create Account” link
+        response = self.client.get(reverse('register'))
+        # Then I should be navigated to a page where I can create a new account
+        self.assertEqual(response.status_code, 200) 
 
 class CartTest(TestCase):
     def setUp(self):
