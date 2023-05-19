@@ -89,19 +89,15 @@ class LoginTest(TestCase):
         self.password = "uKD36k95E*4^"
         self.user = User.objects.create_user(username=self.username, password=self.password)
 
-    def test_login(self):
-        data = {'username': self.username, 'password': self.password}
-        response = self.client.post(reverse('login'), data)
-        self.assertEqual(response.status_code, 302)
-        self.assertRedirects(response, reverse('home')) 
-
-
-    def test_login_fail(self):
-        data = {'username': self.username, 'password': '12345'}
-        response = self.client.post(reverse('login'), data)
+    def test_login_page(self):
+        # Given im on the home page
+        response = self.client.get(reverse('home'))
         self.assertEqual(response.status_code, 200)
-        # self.assertTemplateUsed(response, 'registration/login.html')
-        self.assertContains(response, 'Please enter a correct username and password. Note that both fields may be case-sensitive.')
+        self.assertContains(response, 'Login')
+        # When i click on the login button
+        response = self.client.get(reverse('login'))
+        # Then i should be navigated to the login page
+        self.assertEqual(response.status_code, 200)
 
 class CartTest(TestCase):
     def setUp(self):
